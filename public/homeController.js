@@ -1,12 +1,11 @@
 angular.module('app')
 .controller('homeController', function($scope, userService, $state) {
-  $scope.test = 'Hi!!';
 
-  $scope.user = 'NOT LOGGED IN';
 
   function getUser() {
     userService.getUser().then(function(user) {
       if (user) $scope.user = user.username;
+      else   $scope.user = 'NOT LOGGED IN';
     })
   }
 
