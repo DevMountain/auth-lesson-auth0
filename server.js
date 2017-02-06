@@ -24,7 +24,7 @@ app.use(express.static('./public'));
 /////////////
 // DATABASE //
 /////////////
-const massiveInstance = massive.connectSync({connectionString: 'postgres://postgres:Colour45@localhost/sandbox'})
+const massiveInstance = massive.connectSync({connectionString: 'postgres://localhost/sandbox'})
 
 app.set('db', massiveInstance);
 const db = app.get('db');
