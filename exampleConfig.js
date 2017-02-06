@@ -1,6 +1,7 @@
 module.exports = {
   secret: // Your secret here
-  facebook: {
+  auth0: {
+    domain: // App Auth0 domain,
     clientID: // Client ID,
     clientSecret: //Client Secret,
   }

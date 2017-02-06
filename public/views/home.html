@@ -1,16 +1,16 @@
 <div class="container">
   <div class="row">
     <h1>Hello! {{user}}</h1>
-    <form ng-submit="loginLocal(username, password)">
+    <!-- <form ng-submit="loginLocal(username, password)">
       <div class="six columns">
         <input class="u-full-width" placeholder="username" ng-model="username"/>
         <input class="u-full-width" placeholder="password" ng-model="password"/>
         <input class="button-primary" type="submit" value="Login"/>
       </div>
-    </form>
+    </form> -->
   </div>
   <div class="row">
-    <a href="/auth/facebook/"><button class="button-primary">Login with Facebook</button></a>
+    <a href="/auth"><button class="button-primary">Login with Auth0</button></a>
   </div>
   <div class="row">
     <a href="/auth/logout"><button class="button-primary">Logout</button></a>
