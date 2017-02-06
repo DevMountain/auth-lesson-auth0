@@ -78,7 +78,16 @@ passport.deserializeUser(function(id, done) {
 
 
 
-app.get('/auth', passport.authenticate('auth0'))
+app.get('/auth', passport.authenticate('auth0'));
+
+//**************************//
+//To force specific provider://
+//**************************//
+
+// app.get('/login/google',
+//   passport.authenticate('auth0', {connection: 'google-oauth2'}), function (req, res) {
+//   res.redirect("/");
+// });
 
 app.get('/auth/callback',
   passport.authenticate('auth0', {successRedirect: '/'}), function(req, res) {
