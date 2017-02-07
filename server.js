@@ -8,6 +8,7 @@ const express = require('express'),
       cors = require('cors');
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(session({
   resave: true,
@@ -24,7 +25,7 @@ app.use(express.static('./public'));
 /////////////
 // DATABASE //
 /////////////
-const massiveInstance = massive.connectSync({connectionString: 'postgres://localhost/sandbox'})
+const massiveInstance = massive.connectSync({connectionString: 'postgres://postgres:Colour45@localhost/sandbox'})
 
 app.set('db', massiveInstance);
 const db = app.get('db');
@@ -50,7 +51,7 @@ passport.use(new Auth0Strategy({
         console.log('CREATING USER');
         db.createUserByAuth([profile.displayName, profile.id], function(err, user) {
           console.log('USER CREATED', user);
-          return done(err, user);
+          return done(err, user[0]);
         })
       } else { //when we find the user, return it
         console.log('FOUND USER', user);
@@ -62,28 +63,21 @@ passport.use(new Auth0Strategy({
 
 passport.serializeUser(function(user, done) {
   console.log('serializing', user);
-  done(null, user.userid);
-})
+  done(null, user);
+});
 
-passport.deserializeUser(function(id, done) {
-  db.getUserById([id], function(err, user) {
-    console.log(user);
-    user = user[0];
-    if (err) console.log('des', err);
-    else console.log('RETRIEVED USER');
-    console.log(user);
-    done(null, user);
-  })
-})
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 
 
 app.get('/auth', passport.authenticate('auth0'));
 
+
 //**************************//
 //To force specific provider://
 //**************************//
-
 // app.get('/login/google',
 //   passport.authenticate('auth0', {connection: 'google-oauth2'}), function (req, res) {
 //   res.redirect("/");
@@ -92,7 +86,7 @@ app.get('/auth', passport.authenticate('auth0'));
 app.get('/auth/callback',
   passport.authenticate('auth0', {successRedirect: '/'}), function(req, res) {
     res.status(200).send(req.user);
-  })
+})
 
 app.get('/auth/me', function(req, res) {
   if (!req.user) return res.sendStatus(404);
