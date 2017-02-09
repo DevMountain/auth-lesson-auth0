@@ -11,8 +11,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
+  resave: true, //Without this you get a constant warning about default values
+  saveUninitialized: true, //Without this you get a constant warning about default values
   secret: 'keyboardcat'
 }))
 app.use(passport.initialize());
@@ -50,8 +50,8 @@ passport.use(new Auth0Strategy({
       if (!user) { //if there isn't one, we'll create one!
         console.log('CREATING USER');
         db.createUserByAuth([profile.displayName, profile.id], function(err, user) {
-          console.log('USER CREATED', user);
-          return done(err, user[0]);
+          console.log('USER CREATED', userA);
+          return done(err, user[0]); // GOES TO SERIALIZE USER
         })
       } else { //when we find the user, return it
         console.log('FOUND USER', user);
@@ -61,13 +61,21 @@ passport.use(new Auth0Strategy({
   }
 ));
 
-passport.serializeUser(function(user, done) {
-  console.log('serializing', user);
-  done(null, user);
+//THIS IS INVOKED ONE TIME TO SET THINGS UP
+passport.serializeUser(function(userA, done) {
+  console.log('serializing', userA);
+  var userB = userA;
+  //Things you might do here :
+   //Serialize just the id, get other information to add to session, 
+  done(null, userB); //PUTS 'USER' ON THE SESSION
 });
 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
+//USER COMES FROM SESSION - THIS IS INVOKED FOR EVERY ENDPOINT
+passport.deserializeUser(function(userB, done) {
+  var userC = userC;
+  //Things you might do here :
+    // Query the database with the user id, get other information to put on req.user
+  done(null, userC); //PUTS 'USER' ON REQ.USER
 });
 
 
@@ -90,6 +98,7 @@ app.get('/auth/callback',
 
 app.get('/auth/me', function(req, res) {
   if (!req.user) return res.sendStatus(404);
+  //THIS IS WHATEVER VALUE WE GOT FROM userC variable above.
   res.status(200).send(req.user);
 })
 
